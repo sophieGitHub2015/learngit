@@ -3,7 +3,7 @@ package com.putao.nlp.chatrobot.segment.decoder;
 /**
  * Created by taibai on 8/19/16.
  */
-public class Segment {
+public class Segment implements Comparable<Segment> {
 
 
     String text;
@@ -72,8 +72,8 @@ public class Segment {
                 '}';
     }
 
-
-
-
-
+    @Override
+    public int compareTo(Segment o) {
+        return Double.valueOf(this.getScore()).compareTo(Double.valueOf(o.getScore()));
+    }
 }
