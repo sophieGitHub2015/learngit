@@ -156,8 +156,7 @@ public class LWModel extends Model{
         });
 
         List<Segment> segments = new ArrayList<Segment>();
-        for (int i = 0; i < charArray.length; i++ )
-        {
+        for (int i = 0; i < charArray.length; i++ ) {
             List<DicWordTerm> terms = startPosTermMap.get(i);
             if(null != terms) {
                 for (DicWordTerm term : terms) {
