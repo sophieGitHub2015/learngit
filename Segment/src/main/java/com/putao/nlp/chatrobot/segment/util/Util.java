@@ -1,5 +1,6 @@
 package com.putao.nlp.chatrobot.segment.util;
 
+import com.putao.nlp.chatrobot.segment.decoder.Segment;
 import com.putao.nlp.conf.Config;
 
 import java.io.BufferedReader;
@@ -53,6 +54,73 @@ public class Util {
 
         }
         return lines;
+    }
+
+    /**
+     *
+     * @param segments
+     * @param scoreMargin
+     * @param countMargin
+     * @return
+     */
+    public static List<Segment> filterSegment(List<Segment> segments, double scoreMargin, int countMargin){
+        if(null == segments || segments.isEmpty()
+            || countMargin <= 0){
+            return null;
+        }
+
+        //Filter by scoreMargin
+        List<Segment> segmentByScoreMargins = new ArrayList<Segment>();
+        for(Segment segment : segments){
+            if(segment.getScore() >= scoreMargin){
+                segmentByScoreMargins.add(segment);
+            }
+        }
+
+        if(segmentByScoreMargins.size() <= countMargin){
+            return segmentByScoreMargins;
+        }
+
+        //Filter by top N
+        Comparator<Segment> countComparator =  new Comparator<Segment>(){
+            public int compare(Segment o1, Segment o2) {
+                double leftScore = o1.getScore();
+                double rightScore = o1.getScore();
+                if (rightScore > leftScore) {
+                    return 1;
+                } else if (rightScore < leftScore) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+
+        };
+        Queue<Segment> priorityQueue = new PriorityQueue<Segment>(countMargin, countComparator);
+        for(Segment segment : segmentByScoreMargins){
+            if(priorityQueue.size() < countMargin){
+                priorityQueue.add(segment);
+            }
+            else{
+                Segment topSegment = priorityQueue.peek();
+                if(topSegment.getScore() < segment.getScore()){
+                    priorityQueue.poll();
+                    priorityQueue.add(segment);
+                }
+            }
+        }
+
+        List<Segment> resulSegments = new ArrayList<Segment>();
+
+        while(!priorityQueue.isEmpty()){
+            Segment segment = priorityQueue.peek();
+            resulSegments.add(segment);
+            priorityQueue.poll();
+        }
+
+        return resulSegments;
+
+
     }
 
     /**
