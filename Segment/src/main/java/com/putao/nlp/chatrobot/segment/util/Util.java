@@ -77,8 +77,18 @@ public class Util {
             }
         }
 
-        if(segmentByScoreMargins.size() <= countMargin){
-            return segmentByScoreMargins;
+        return filterSegment(segmentByScoreMargins, countMargin);
+    }
+
+    /**
+     *
+     * @param segments
+     * @param countMargin
+     * @return
+     */
+    public static List<Segment> filterSegment(List<Segment> segments, int countMargin) {
+        if(segments.size() <= countMargin){
+            return segments;
         }
 
         //Filter by top N
@@ -97,7 +107,7 @@ public class Util {
 
         };
         Queue<Segment> priorityQueue = new PriorityQueue<Segment>(countMargin, countComparator);
-        for(Segment segment : segmentByScoreMargins){
+        for(Segment segment : segments){
             if(priorityQueue.size() < countMargin){
                 priorityQueue.add(segment);
             }
@@ -119,21 +129,24 @@ public class Util {
         }
 
         return resulSegments;
-
-
     }
 
-    /**
-     *
-     * @param sentence
-     * @return
-     */
+        /**
+         *
+         * @param sentence
+         * @return
+         */
     public static List<String> splitSentence(String sentence){
        String splitSeperator = Config.get().get("split.separator", ",.,。;");
         return null;
     }
 
 
+    /**
+     *
+     * @param dirPath
+     * @param outputDir
+     */
     public static void mergeDicWeight(String dirPath, String outputDir) {
         Map<String, Integer> wordCountMap = null;
             File dir = new File(dirPath);

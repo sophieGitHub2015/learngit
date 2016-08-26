@@ -17,7 +17,7 @@ import java.util.*;
  * 根节点稍有不同，根节点没有 failure 功能，它的“failure”指的是按照字符串路径转移到下一个状态。其他节点则都有failure状态。
  * </p>
  *
- * @author c_jia
+ * @author
  */
 public class State
 {
